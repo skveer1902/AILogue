@@ -1,0 +1,49 @@
+.inputPageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.inputForm {
+  background-color: #fefefe;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inputForm input,
+.inputForm select,
+.inputForm textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.inputForm button {
+  margin-top: 1rem;
+  padding: 12px;
+  background-color: #4a4a4a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.inputForm button:hover {
+  background-color: #333;
+}
+
+.formTitle {
+  text-align: center;
+  margin-bottom: 1rem;
+}

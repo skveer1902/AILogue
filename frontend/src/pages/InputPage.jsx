@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './InputPage.css';
 
 /**
  * InputPage component collects user inputs for AI dialogue
@@ -14,9 +15,10 @@ function InputPage({ onStartConversation }) {
   };
 
   return (
-    <div className="centerBox">
-      <form className="inputContainer" onSubmit={handleSubmit}>
-        <h2>Start AILogue</h2>
+    <div className="inputPageWrapper">
+      <form className="inputForm" onSubmit={handleSubmit}>
+        <h2 className="formTitle">Start AILogue</h2>
+
         <label>Number of Exchanges:</label>
         <input
           type="number"
@@ -26,13 +28,13 @@ function InputPage({ onStartConversation }) {
           required
         />
 
-        <label style={{ marginTop: '1rem' }}>Select Starter AI:</label>
+        <label>Select Starter AI:</label>
         <select value={starterAI} onChange={(e) => setStarterAI(e.target.value)}>
           <option value="ChatGPT">ChatGPT</option>
           <option value="Gemini">Gemini</option>
         </select>
 
-        <label style={{ marginTop: '1rem' }}>Topic or Initial Prompt:</label>
+        <label>Topic or Initial Prompt:</label>
         <textarea
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
@@ -40,7 +42,7 @@ function InputPage({ onStartConversation }) {
           required
         />
 
-        <button type="submit" style={{ marginTop: '1rem', width: '100%' }}>Start Conversation</button>
+        <button type="submit">Start Conversation</button>
       </form>
     </div>
   );
