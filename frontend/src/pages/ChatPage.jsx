@@ -1,17 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import MessageBubble from '../components/MessageBubble';
 
-/**
- * ChatPage displays AI conversation with real-time animation
- */
 function ChatPage({ starterAI, topic, numExchanges, onBack }) {
   const [chatHistory, setChatHistory] = useState([]);
   const [fullConversation, setFullConversation] = useState([]);
   const [loading, setLoading] = useState(true);
   const [typing, setTyping] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const chatEndRef = useRef(null);
 
-  // Scroll to bottom whenever a new message is added
   const scrollToBottom = () => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -40,11 +37,11 @@ function ChatPage({ starterAI, topic, numExchanges, onBack }) {
         setLoading(false);
         revealMessagesSequentially(data.conversation);
       } else {
-        setChatHistory([{ sender: 'System', text: data.error || 'Unknown error' }]);
+        showError(data.error || 'Unexpected error from backend.');
         setLoading(false);
       }
     } catch (err) {
-      setChatHistory([{ sender: 'System', text: 'Network error. Try again later.' }]);
+      showError('Network error. Could not reach backend.');
       setLoading(false);
     }
   };
@@ -52,36 +49,48 @@ function ChatPage({ starterAI, topic, numExchanges, onBack }) {
   const revealMessagesSequentially = async (messages) => {
     for (let i = 0; i < messages.length; i++) {
       setTyping(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Typing delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setChatHistory(prev => [...prev, messages[i]]);
       setTyping(false);
     }
+  };
+
+  const showError = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => setErrorMessage(''), 5000); // Hide after 5s
   };
 
   return (
     <div style={{ padding: '1rem' }}>
       <button onClick={onBack}>Return to Input Page</button>
 
-      <div style={{ maxHeight: '80vh', overflowY: 'scroll', marginTop: '1rem' }}>
-        {chatHistory.map((msg, index) => (
-          <MessageBubble
-            key={index}
-            messageText={msg.text}
-            sender={msg.sender}
-            alignRight={msg.sender === starterAI}
-          />
-        ))}
+      {loading ? (
+        <div className="spinner" />
+      ) : (
+        <div style={{ maxHeight: '80vh', overflowY: 'scroll', marginTop: '1rem' }}>
+          {chatHistory.map((msg, index) => (
+            <MessageBubble
+              key={index}
+              messageText={msg.text}
+              sender={msg.sender}
+              alignRight={msg.sender === starterAI}
+            />
+          ))}
 
-        {typing && (
-          <MessageBubble
-            messageText="Typing..."
-            sender="System"
-            alignRight={false}
-          />
-        )}
+          {typing && (
+            <MessageBubble
+              messageText="Typing..."
+              sender="System"
+              alignRight={false}
+            />
+          )}
+          <div ref={chatEndRef} />
+        </div>
+      )}
 
-        <div ref={chatEndRef} />
-      </div>
+      {errorMessage && (
+        <div className="snackbar">{errorMessage}</div>
+      )}
     </div>
   );
 }
